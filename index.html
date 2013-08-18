@@ -1,0 +1,39 @@
+<!doctype html>
+<html dir="ltr" lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Data Binding with Bound.js</title>
+    </head>
+    <body>
+        <input type="text" data-bind-customname="our default value">
+        <div data-bind-blah="our divs default value"></div>
+        
+        <script src="require.js"></script>
+        <script>
+            require(['bound'], function (Bound) {
+                var boundObject = new Bound('customname'); // a form element (<input>)
+                
+                boundObject.set('a new value set via JS');
+                boundObject.set('a new value set via JS');
+                boundObject.set('a new value set via JS'); // this value doesn't get set as it's already set
+                
+                // Notice even though we call the `set` method 3 times already, because of pubsub async nature the value is 'our default value'
+                console.log('Get the current value: ', boundObject.get());
+
+                // Now the value should be the current value 'a new value set via JS'
+                window.setTimeout(function(){
+                    console.log('Get the current value: ', boundObject.get());
+                }, 2000);
+
+                var anotherBoundObject = new Bound('blah'); // a div element
+                
+                anotherBoundObject.set('some content for our div');
+                
+                window.setTimeout(function(){
+                    anotherBoundObject.set('some more content for our div after 2 seconds');
+                }, 2000);
+            });
+        </script>
+    </body>
+</html>
